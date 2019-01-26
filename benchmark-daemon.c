@@ -131,15 +131,17 @@ float get_latency(char* my_ip, char* host_ip, char* bench_dir, char* user)
 float get_bandwidth(char* my_ip, char* host_ip, char* bench_dir, char* user)
 {
   char outfile[24];
+  char outfile2[24];
   char command[256];
   snprintf(outfile,24,"band_%s",my_ip);
   FILE* fhand = fopen(outfile,"w");
   fprintf(fhand,"%s user=%s\n",my_ip,user);
   fprintf(fhand,"%s user=%s\n",host_ip,user);
   fclose(fhand);
-  snprintf(command,256,"(mpirun -n 2 -f ./%s %s/IMB-MPI1 PingPong | sed '1,55d' | sed '14,16d') > %s",outfile,bench_dir,outfile);
+  snprintf(outfile2,24,"ban_%s",my_ip);
+  snprintf(command,256,"(mpirun -n 2 -f ./%s %s/IMB-MPI1 PingPong | sed '1,55d' | sed '14,16d') > %s",outfile,bench_dir,outfile2);
   system(command);
-  FILE* handle = fopen(outfile,"r");
+  FILE* handle = fopen(outfile2,"r");
   int field1, field2;
   float field3, field4, bandwidth;
   bandwidth = 0.0;
@@ -149,6 +151,7 @@ float get_bandwidth(char* my_ip, char* host_ip, char* bench_dir, char* user)
     bandwidth = bandwidth + field4;
   }
   bandwidth = bandwidth/13;
+  fclose(handle);
   return bandwidth;
 }
 
@@ -318,7 +321,7 @@ void benchmark_node(char* my_ip, node_data* curr_node,char* bench_dir, char* my_
 
 void benchmark(char* fname, char* bench_dir)
 {
-  //sleep(120);
+  sleep(120);
   while(1)
   {
     pthread_mutex_lock(&lock);
@@ -365,6 +368,7 @@ void benchmark(char* fname, char* bench_dir)
         Add(new_node);
       }
     }
+    fclose(file_handle);
     pthread_mutex_unlock(&lock);
     sleep(900);
   }
