@@ -259,7 +259,7 @@ void serve_rpc(void* data)
     printf("Error listening on RPC socket\n");
     exit(EXIT_FAILURE);
   }
-
+  printf("RPC Facilty on %s:%d\n",data_t->my_ip,RPC_PORT);
   while(1)
   {
     sin_size = sizeof(struct sockaddr_in);
@@ -318,6 +318,7 @@ void benchmark_node(char* my_ip, node_data* curr_node,char* bench_dir, char* my_
 
 void benchmark(char* fname, char* bench_dir)
 {
+  sleep(120);
   while(1)
   {
     pthread_mutex_lock(&lock);
@@ -396,14 +397,16 @@ int main(int argc, char** argv)   /* argv[1] is config file and argv[2] is the n
       exit(EXIT_FAILURE);
     }
     /* Close out the standard file descriptors */
-    close(STDIN_FILENO);
-    close(STDOUT_FILENO);
-    close(STDERR_FILENO);
+    //close(STDIN_FILENO);
+    //close(STDOUT_FILENO);
+    //close(STDERR_FILENO);
 
     pthread_mutex_init(&lock,NULL); /*Initialize the mutex lock*/
 
     FILE* file_handle = fopen(argv[1],"r");
     char my_ip[IPLEN];
+    char my_name[MAX_HOST_NAME];
+    fscanf(file_handle,"%s\n",my_name);
     fscanf(file_handle,"%s\n",my_ip);
     fclose(file_handle);
 

@@ -46,7 +46,8 @@ int main()
   struct sockaddr_in address;
   int sock = 0, valread;
   struct sockaddr_in serv_addr;
-  char *hello = "127.0.0.1";
+  char *hello1 = "172.27.19.21";
+  char *hello2 = "172.27.19.24";
   node_data* buffer = (node_data*)malloc(sizeof(node_data));
   if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
   {
@@ -71,13 +72,30 @@ int main()
       printf("\nConnection Failed \n");
       return -1;
   }
-  send(sock , hello , strlen(hello) , 0 );
-  printf("Hello message sent\n");
-  valread = read( sock , buffer, sizeof(node_data));
-  printf("%d\n",buffer->core_count);
-  printf("%f\n",buffer->cpu_speed);
-  printf("%f\n",buffer->latency);
-  printf("%f\n",buffer->bandwidth);
+  for(int i=0;i<2;i++)
+  {
+    if(i==0)
+{
+    send(sock , hello1 , strlen(hello1) , 0 );
+    printf("Data of node %s\n",hello1);
+    valread = read( sock , buffer, sizeof(node_data));
+    printf("%d\n",buffer->core_count);
+    printf("%f\n",buffer->cpu_speed);
+    printf("%f\n",buffer->latency);
+    printf("%f\n",buffer->bandwidth);
+}
+else
+{
+    send(sock,hello2,strlen(hello2),0);
+    printf("Data of node %s\n",hello2);
+    valread=read(sock,buffer,sizeof(node_data));
+    printf("%d\n",buffer->core_count);
+    printf("%f\n",buffer->cpu_speed);
+    printf("%f\n",buffer->latency);
+    printf("%f\n",buffer->bandwidth);
+}
+
+  }
   //printf("%s\n",buffer );
   return 0;
 }
