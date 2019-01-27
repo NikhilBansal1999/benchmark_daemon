@@ -307,7 +307,7 @@ void benchmark_node(char* my_ip, node_data* curr_node,char* bench_dir, char* my_
     printf("Error connecting to remote host\n");
     exit(EXIT_FAILURE);
   }
-  struct send_data* host_data;
+  struct send_data* host_data = (struct send_data*)malloc(sizeof(struct send_data*));
   read(sockfd, host_data, sizeof(struct send_data));
   close(sockfd);
   curr_node->cpu_speed = host_data->cpu_speed;
@@ -318,7 +318,7 @@ void benchmark_node(char* my_ip, node_data* curr_node,char* bench_dir, char* my_
 
 void benchmark(char* fname, char* bench_dir)
 {
-  sleep(120);
+  //sleep(120);
   while(1)
   {
     pthread_mutex_lock(&lock);
