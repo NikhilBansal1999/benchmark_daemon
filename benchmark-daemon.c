@@ -291,6 +291,7 @@ void* serve_ipc(void* params)
       node_data* data = is_present(ip_ad);
       if(data == NULL) /*The data of requested node is not present*/
       {
+        data = (node_data*)malloc(sizeof(node_data));
         data->core_count = 0;
         data->cpu_speed = 0;
         data->latency = 100000.0;
